@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +17,8 @@ import com.isteer.dto.StatusMessageDto;
 import com.isteer.entity.Departments;
 import com.isteer.enums.HrManagementEnum;
 import com.isteer.service.HrManagementDepartmentService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.validation.Valid;
 
 
 
@@ -30,38 +31,8 @@ public class HrManagementDepartmentController {
 	HrManagementDepartmentService service;
 	
 		
-//	@PostMapping("departments")
-//    public ResponseEntity<?> addDepartment(@RequestBody Departments departments) {
-//        int status = service.addDepartment(departments);
-//        
-//        if (status > 0) {
-//            StatusMessageDto message = new StatusMessageDto(
-//                    HrManagementEnum.Department_created_message.getStatusCode(),
-//                    HrManagementEnum.Department_created_message.getStatusMessage());
-//            return ResponseEntity.status(HttpStatus.OK).body(message);
-//        } else if (status == -1) {
-//            // Tenant not found, invalid tenantId
-//            ErrorMessageDto error = new ErrorMessageDto(
-//                    HrManagementEnum.Tenant_valid_not_found.getStatusCode(),
-//                    HrManagementEnum.Tenant_valid_not_found.getStatusMessage());
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-//        }else if (status == -2) {
-//            // Department already exists
-//            ErrorMessageDto error = new ErrorMessageDto(
-//                    HrManagementEnum.Department_already_found.getStatusCode(),
-//                    HrManagementEnum.Department_already_found.getStatusMessage());
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-//        }
-//
-//        ErrorMessageDto error = new ErrorMessageDto(
-//                HrManagementEnum.DEPARTMENT_CREATION_FAILED.getStatusCode(),
-//                HrManagementEnum.DEPARTMENT_CREATION_FAILED.getStatusMessage());
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-//    }
-	
-	
 	@PostMapping("departments")
-	public ResponseEntity<?> addDepartment(@RequestBody Departments departments) {
+	public ResponseEntity<?> addDepartment(@Valid @RequestBody Departments departments) {
 	    int status = service.addDepartment(departments);
 
 	    if (status > 0) {
@@ -91,7 +62,7 @@ public class HrManagementDepartmentController {
 	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 	
-	@GetMapping("departments")
+	@GetMapping("/departments")
 	public ResponseEntity<?> getAllDepartments() {
 	List<?> list = service.getAllDepartments();
 	
@@ -106,7 +77,7 @@ public class HrManagementDepartmentController {
 	
 	
 	@PutMapping("departments")
-	public ResponseEntity<?> updateDepartMent(@RequestBody Departments department) {
+	public ResponseEntity<?> updateDepartMent(@Valid @RequestBody Departments department) {
 	
 		int status = service.updateTenant(department);
 		

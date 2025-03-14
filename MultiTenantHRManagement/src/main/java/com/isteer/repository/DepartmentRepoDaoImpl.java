@@ -13,10 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.isteer.entity.Departments;
-import com.isteer.entity.Tenants;
 import com.isteer.repository.dao.DeapartmentRepoDao;
 import com.isteer.util.DepartmentRowMapper;
-import com.isteer.util.TenantRowMapper;
 
 @Component
 public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
@@ -59,7 +57,7 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
     @Override
     public int addDepartment(Departments department) {
     	
-    	String addDepartmentQuery = "INSERT IGNORE INTO departments (department_uuid, department_head_uuid, tenant_id, department_name, contact_email, contact_phone, description) "
+    	String addDepartmentQuery = "INSERT INTO departments (department_uuid, department_head_uuid, tenant_id, department_name, contact_email, contact_phone, description) "
                 + "VALUES (CONCAT('Department-', UUID()), CONCAT('HOD-', UUID()), :tenantId, :departmentName, :email, :phone, :description)";
 
         SqlParameterSource params = new MapSqlParameterSource()
@@ -115,6 +113,7 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
 	        }
 	    }
 	
+	@Override
 	public List<Departments> getAllDepartments(){
 		String sql = "SELECT department_uuid,department_head_uuid,tenant_id,department_name,contact_email,contact_phone,description FROM departments WHERE department_status= :status";
 	 SqlParameterSource param = new MapSqlParameterSource()

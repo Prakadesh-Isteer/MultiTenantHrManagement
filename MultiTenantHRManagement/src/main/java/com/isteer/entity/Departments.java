@@ -2,14 +2,20 @@ package com.isteer.entity;
 
 import org.springframework.stereotype.Component;
 
+import jakarta.validation.constraints.NotBlank;
+
 @Component
 public class Departments {
 	private String tenantId;
 	private String departmentId;
 	private String departmentHeadId;
+	@NotBlank(message = "DEPARTMENT NAME SHOULD NOT BE BLANK")
 	private String departmentName;
+	@NotBlank(message = "EMAIL FIELD SHOULD NOT BE EMPTY")
 	private String email;
+	@NotBlank(message = "PHONE NUMBER FIELD SHOULD NOT BE BLANK")
 	private String phoneNumber;
+	@NotBlank(message = "DESCRIPTION FIELD SHOULD NOT BE BLANK")
 	private String description;
 	
 	public Departments() {
