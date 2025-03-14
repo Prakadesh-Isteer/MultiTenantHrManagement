@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isteer.dto.ErrorMessageDto;
@@ -66,8 +68,8 @@ public class HrManagementTenantController {
 			return ResponseEntity.status(HttpStatus.OK).body(message);
 		} else if (status == -1) {
 			// Tenant not found, invalid tenantId
-			ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.Tenant_not_found.getStatusCode(),
-					HrManagementEnum.Tenant_not_found.getStatusMessage());
+			ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.Tenant_valid_not_found.getStatusCode(),
+					HrManagementEnum.Tenant_valid_not_found.getStatusMessage());
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 		}
 
@@ -75,5 +77,30 @@ public class HrManagementTenantController {
 				HrManagementEnum.Tenant_creation_failed.getStatusMessage());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
+	
+	
+	@DeleteMapping("tenant")
+	public ResponseEntity<?> deleteTenant(@RequestParam String tenantId){
+		
+		int status = service.deleteTenant(tenantId);
+		
+		if (status > 0) {
+			StatusMessageDto message = new StatusMessageDto(
+					HrManagementEnum.Tenant_deletion.getStatusCode(),
+					HrManagementEnum.Tenant_deletion.getStatusMessage());
+			return ResponseEntity.status(HttpStatus.OK).body(message);
+		} 
+		else if (status == -1) {
+			// Tenant not found, invalid tenantId
+			ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.Tenant_valid_not_found.getStatusCode(),
+					HrManagementEnum.Tenant_valid_not_found.getStatusMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+		}
 
+		ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.TENANT_FAILED_DELETION.getStatusCode(),
+				HrManagementEnum.TENANT_FAILED_DELETION.getStatusMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	
+}
+	
 }

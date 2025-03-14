@@ -28,5 +28,9 @@ public class HrManagementTenantService {
 		return repo.updateTenant(tenant);  
 		
 	}
+	
+	public int deleteTenant(String tenantId) {
+		return repo.deleteTenant(tenantId);
+	}
 
 }
