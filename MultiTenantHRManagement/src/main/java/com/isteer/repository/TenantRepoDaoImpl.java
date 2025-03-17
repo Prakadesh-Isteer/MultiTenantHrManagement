@@ -2,6 +2,7 @@ package com.isteer.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -26,9 +27,11 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
 	
 	@Override
 	public int addTenant(Tenants tenants) {
-		String insertTenant = "INSERT INTO tenants (tenant_uuid, tenant_name, address, contact_email, contact_phone, tenant_country, tenant_state, tenant_city) VALUES (CONCAT('Tenant-', UUID()), :tenantName, :address, :email, :phone, :tenantCountry, :tenantState, :tenantCity)";
+		UUID uuid = UUID.randomUUID();
+        String tenantUuid = "Tenant-".concat(uuid.toString());
+		String insertTenant = "INSERT INTO tenants (tenant_uuid, tenant_name, address, contact_email, contact_phone, tenant_country, tenant_state, tenant_city) VALUES (:tenantId, :tenantName, :address, :email, :phone, :tenantCountry, :tenantState, :tenantCity)";
 		SqlParameterSource param = new MapSqlParameterSource()
-//				.addValue("(CONCAT('Tenant-', UUID()))", tenants.getTenantId())
+                .addValue("tenantId", tenantUuid)
 				.addValue("tenantName", tenants.getTenantName())
 				.addValue("address", tenants.getAddress() )
 				.addValue("email", tenants.getEmail() )

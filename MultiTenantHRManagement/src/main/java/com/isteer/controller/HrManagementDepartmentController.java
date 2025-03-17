@@ -52,8 +52,8 @@ public class HrManagementDepartmentController {
 	    } else if (status == -2) {
 	        // Department already exists
 	        ErrorMessageDto error = new ErrorMessageDto(
-	                HrManagementEnum.Department_already_found.getStatusCode(),
-	                HrManagementEnum.Department_already_found.getStatusMessage());
+	                HrManagementEnum.DUPLICATE_KEY_EXCEPTION.getStatusCode(),
+	                HrManagementEnum.DUPLICATE_KEY_EXCEPTION.getStatusMessage());
 	        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
 	    }
 

@@ -2,6 +2,7 @@ package com.isteer.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -59,11 +60,16 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
     // Method to add the department (also not using * in SQL)
     @Override
     public int addDepartment(Departments department) {
+    	UUID uuid = UUID.randomUUID();
+        String departmentUuid = "Department-".concat(uuid.toString()) ;
+        String hodId = "HOD-".concat(uuid.toString());
     	
     	String addDepartmentQuery = "INSERT INTO departments (department_uuid, department_head_uuid, tenant_id, department_name, contact_email, contact_phone, description) "
-                + "VALUES (CONCAT('Department-', UUID()), CONCAT('HOD-', UUID()), :tenantId, :departmentName, :email, :phone, :description)";
+                + "VALUES (:departmentUuid, :headId, :tenantId, :departmentName, :email, :phone, :description)";
 
         SqlParameterSource params = new MapSqlParameterSource()
+        		.addValue("departmentUuid", departmentUuid)
+        		.addValue("headId", hodId)
                 .addValue("tenantId", department.getTenantId())
                 .addValue("departmentName", department.getDepartmentName())
                 .addValue("email", department.getEmail())

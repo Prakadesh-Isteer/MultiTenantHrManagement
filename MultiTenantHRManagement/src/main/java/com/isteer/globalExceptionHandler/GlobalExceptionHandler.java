@@ -45,8 +45,8 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorMessageDto DuplicateKeyException(org.springframework.dao.DuplicateKeyException e) {
      ErrorMessageDto invaildOperation = new ErrorMessageDto();
-		invaildOperation.setErrorCode(HrManagementEnum.Department_already_found.getStatusCode());
-		invaildOperation.setErrorMessage(HrManagementEnum.Department_already_found.getStatusMessage());
+		invaildOperation.setErrorCode(HrManagementEnum.DUPLICATE_KEY_EXCEPTION.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.DUPLICATE_KEY_EXCEPTION.getStatusMessage());
 		return invaildOperation;
 	}
 	
