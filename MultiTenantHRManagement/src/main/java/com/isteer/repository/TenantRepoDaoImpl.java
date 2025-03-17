@@ -48,24 +48,7 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
 				.addValue("status", 1);
 		return template.query(sql, param, new TenantRowMapper());
 	}
-	//--------------------------------------------------------------------------------------------
-	
-//	public int updateTenant(Tenants tenant) {
-//	    String sql = "UPDATE tenants SET tenant_name = :tenantName, address = :address, contact_email = :email, contact_phone = :phone, tenant_country = :tenantCountry, tenant_state = :tenantState, tenant_city = :tenantCity WHERE tenant_uuid = :tenantId";
-//	    
-//	    SqlParameterSource param = new MapSqlParameterSource()
-//	        .addValue("tenantId", tenant.getTenantId())
-//	        .addValue("tenantName", tenant.getTenantName())
-//	        .addValue("address", tenant.getAddress())
-//	        .addValue("email", tenant.getEmail())
-//	        .addValue("phone", tenant.getPhoneNumber())
-//	        .addValue("tenantCountry", tenant.getTenantCountry())
-//	        .addValue("tenantState", tenant.getTenantState())
-//	        .addValue("tenantCity", tenant.getTenantCity());
-//	    
-//	    return template.update(sql, param);
-//	}
-	//-----------------------------------------------------------------------------------------------------------------
+
 	
 	// Method to check if a tenant exists by tenantId
 	public Optional<Tenants> findById(String tenantId) {
@@ -118,34 +101,7 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
             return 0;  // Indicating failure to update
         }
     }
-    
-//--------------------------------------------------------------------------------------------------------
-    
-//    @Override
-//    public int deleteTenant(String tenantId) {
-//    	
-//    	   if (tenantId == null || tenantId.trim().isEmpty()) {
-//    	       
-//    	       throw new TenantIdNullException(HrManagementEnum.Tenant_id_null);
-//    	    }
-//     try {
-//        // Soft delete query
-//        String softDelete = "UPDATE tenants SET tenant_status = :status WHERE tenant_uuid = :tenantId";
-//        MapSqlParameterSource param = new MapSqlParameterSource();
-//                param.addValue("status", 0);  // Assuming 0 represents deleted status
-//                param.addValue("tenantId", tenantId); 
-//        
-//        // Perform the update (soft delete)
-//        return template.update(softDelete, param);
-//        
-//     }catch(Exception e) {
-//    	
-//    	return 0;
-//     }
-//    }
-    
-  //--------------------------------------------------------------------------------
-    
+ 
     @Override
     public int deleteTenant(String tenantId) {
         if (tenantId == null || tenantId.trim().isEmpty()) {

@@ -43,5 +43,9 @@ public class HrManagementDepartmentService {
 		return repo.getAllDepartments();
 
 	}
+	
+	public int deleteDepartment(String departmentId) {
+		return repo.deleteDepartment(departmentId);
+	}
 
 }

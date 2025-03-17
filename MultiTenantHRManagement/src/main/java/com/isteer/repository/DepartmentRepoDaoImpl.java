@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.isteer.entity.Departments;
+import com.isteer.enums.HrManagementEnum;
+import com.isteer.exception.DepartmentIdNullException;
+import com.isteer.exception.TenantIdNullException;
 import com.isteer.repository.dao.DeapartmentRepoDao;
 import com.isteer.util.DepartmentRowMapper;
 
@@ -120,6 +123,45 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
 			 .addValue("status", 1);
 	 return template.query(sql, param , new DepartmentRowMapper());
 	}
+
+	@Override
+	public int deleteDepartment(String departmentId) {
+		 if (departmentId == null || departmentId.trim().isEmpty()) {
+	            throw new DepartmentIdNullException(HrManagementEnum.Department_id_null);
+	        }
+		 
+		 try {
+			 // Check if tenant exists by selecting the tenant_uuid column
+	            String checkDepartmentExistsQuery = "SELECT department_uuid FROM departments WHERE department_uuid = :departmentId  AND department_status = :status";
+	            MapSqlParameterSource param = new MapSqlParameterSource();
+	            param.addValue("status", 1);
+	            param.addValue("departmentId", departmentId);
+
+	            // Execute query to check if tenant exists
+	            List<String> departmentUuids = template.queryForList(checkDepartmentExistsQuery, param, String.class);
+
+	            // If the tenant UUID doesn't exist in the result list, return -1 (tenant not found)
+	            if (departmentUuids.isEmpty()) {
+	                return -1; // Tenant not found
+	            }
+
+	            // Soft delete query
+	            String softDelete = "UPDATE departments SET department_status = :status WHERE department_uuid = :departmentId";
+	            param.addValue("status", 0);  // Assuming 0 represents deleted status
+	            
+	            // Perform the update (soft delete)
+	            return template.update(softDelete, param);
+	            
+			 
+		 }catch(Exception e){
+				return 0;
+		 }
+
+		
+
+	}
+	
+	
 	
 	}
     

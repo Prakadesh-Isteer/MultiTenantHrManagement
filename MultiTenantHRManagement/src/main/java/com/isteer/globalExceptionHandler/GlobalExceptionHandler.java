@@ -32,6 +32,15 @@ public class GlobalExceptionHandler {
 		return invaildOperation;
 	}
 	
+	@ExceptionHandler(com.isteer.exception.DepartmentIdNullException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto DepartmentIdNullException(com.isteer.exception.DepartmentIdNullException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.Department_id_null.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.Department_id_null.getStatusMessage());
+		return invaildOperation;
+	}
+	
 	@ExceptionHandler(org.springframework.dao.DuplicateKeyException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorMessageDto DuplicateKeyException(org.springframework.dao.DuplicateKeyException e) {

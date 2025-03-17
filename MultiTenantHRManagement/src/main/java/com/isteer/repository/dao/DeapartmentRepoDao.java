@@ -11,4 +11,5 @@ public interface DeapartmentRepoDao {
 	public boolean isDepartmentExist(String departmentName, String tenantId);
 	public int updateDepartment(Departments department);
 	public List<Departments> getAllDepartments();
+	public int deleteDepartment(String departmentId) ;
 }
