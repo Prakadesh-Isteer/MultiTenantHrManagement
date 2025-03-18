@@ -1,5 +1,7 @@
 package com.isteer.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,25 @@ public class HrManagementEmployeeService {
 		
 	}
 	
+	public List<Employee> getAllUsers(){
+		return repo.getAllUsers();
+	}
+	
+	public List<Employee> getuserById(String employeeId){
+		return repo.getUsersById(employeeId);
+	}
+	
 	public int addRole(Roles role) {
 		return repo.addRole(role);
 	}
 	
+	public int updateUser(Employee employee) {
+		return repo.updateUser(employee);
+	}
+	
+	public int deleteEmployee(String employeeId) {
+		return repo.deleteEmployee(employeeId);
+	}
+		
 	
 }

@@ -57,7 +57,8 @@ public class HrManagementTenantController {
 	}
 
 	@PutMapping("tenant")
-	public ResponseEntity<?> updateTenant(@Valid @RequestBody Tenants tenant) {
+	public ResponseEntity<?> updateTenant(@Valid @RequestParam String tenantId, @RequestBody Tenants tenant) {
+		tenant.setTenantId(tenantId);
 		// Ensure tenant object has the tenantId before calling the service method
 		int status = service.updateTenant(tenant);
 

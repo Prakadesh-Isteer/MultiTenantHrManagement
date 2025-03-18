@@ -79,8 +79,8 @@ public class HrManagementDepartmentController {
 	
 	
 	@PutMapping("departments")
-	public ResponseEntity<?> updateDepartMent(@Valid @RequestBody Departments department) {
-	
+	public ResponseEntity<?> updateDepartMent(@Valid @RequestParam String departmentId, @RequestBody Departments department) {
+	     department.setDepartmentId(departmentId);
 		int status = service.updateTenant(department);
 		
 		if (status > 0) {

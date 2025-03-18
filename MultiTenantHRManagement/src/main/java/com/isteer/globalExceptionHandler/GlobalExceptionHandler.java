@@ -40,6 +40,15 @@ public class GlobalExceptionHandler {
 		invaildOperation.setErrorMessage(HrManagementEnum.Department_id_null.getStatusMessage());
 		return invaildOperation;
 	}
+	@ExceptionHandler(com.isteer.exception.EmployeeIdNullException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto EmployeeIdNullException(com.isteer.exception.EmployeeIdNullException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.Employee_id_null.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.Employee_id_null.getStatusMessage());
+		return invaildOperation;
+	}
+	
 	
 	@ExceptionHandler(org.springframework.dao.DuplicateKeyException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,5 +58,24 @@ public class GlobalExceptionHandler {
 		invaildOperation.setErrorMessage(HrManagementEnum.DUPLICATE_KEY_EXCEPTION.getStatusMessage());
 		return invaildOperation;
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto IllegalArgumentException(IllegalArgumentException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.ILLEGAL_AGRUMENT.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.ILLEGAL_AGRUMENT.getStatusMessage());
+		return invaildOperation;
+	}
+	
+	@ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto MissingServletRequestParameterException(org.springframework.web.bind.MissingServletRequestParameterException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.MissserveletException.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.MissserveletException.getStatusMessage());
+		return invaildOperation;
+	}
+	
 	
 }

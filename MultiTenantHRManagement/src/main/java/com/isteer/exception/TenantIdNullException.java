@@ -10,9 +10,9 @@ public class TenantIdNullException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 		 private final HrManagementEnum error;
-			public TenantIdNullException(HrManagementEnum tickectIdException) {
-				super(tickectIdException.getStatusMessage());
-				   this.error = tickectIdException;
+			public TenantIdNullException(HrManagementEnum IdException) {
+				super(IdException.getStatusMessage());
+				   this.error = IdException;
 			}
 			
 			public HrManagementEnum getError() {
