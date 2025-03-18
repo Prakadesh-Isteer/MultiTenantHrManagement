@@ -30,10 +30,15 @@ public enum HrManagementEnum {
 	User_deleted_success(1234,"USER HAVE BEEN DELETED SUCCESSFULLY"),
 	User_deleted_fail(9033,"USER DELETION FAILED"),
 	Role_added(1232,"ROLE ADDED SUCCESSFULLY"),
+	Role_id_null(9822, "ROLE ID SHOULD BE PROVIDED"),
 	Role_not_added(9033,"ROLE NOT ADDED SOEMTHING WENT WRONG"),
-	MissserveletException(1023,"REQUEST PARAMETER CANNOT BE EMPTY"),
+	USER_ROLE_UPDATED(1267,"USER ROLE HAS BEEN UPDATED SUCCESSFULLY"),
+	USER_ROLE_UPDATION_FAIL(9857,"USER ROLE CANNOT BE UPDATED"),
+	MissserveletException(1023,"REQUEST PARAMETER CANNOT BE EMPTY OR MISMATCHED"),
+	Date_mismatch(1223,"DATE PROVIDED FORMAT IS INCORRET (YYYY-MM-DD)"),
 	
-	ILLEGAL_AGRUMENT(9021, "Role 'Employee' not found in the database.");
+	ILLEGAL_AGRUMENT(9021, "Role 'Employee' not found in the database."),
+	Illegal_Argumnet_role(9236, "Role cannot found in the database");
 
 	int statusCode;
 	String statusMessage;

@@ -40,6 +40,15 @@ public class HrManagementEmployeeService {
 	public int deleteEmployee(String employeeId) {
 		return repo.deleteEmployee(employeeId);
 	}
+	
+	public List<Roles> getAllAvailableRoles() {
+		return repo.getAllAvailableRoles();
+		
+	}
+	
+	public int updateUserRole(String employeeId ,String roleId) {
+		return repo.updateUserRole(employeeId,roleId);
+	}
 		
 	
 }

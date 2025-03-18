@@ -48,6 +48,14 @@ public class GlobalExceptionHandler {
 		invaildOperation.setErrorMessage(HrManagementEnum.Employee_id_null.getStatusMessage());
 		return invaildOperation;
 	}
+	@ExceptionHandler(com.isteer.exception.RoleIdNullException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto RoleIdNullException(com.isteer.exception.RoleIdNullException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.Role_id_null.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.Role_id_null.getStatusMessage());
+		return invaildOperation;
+	}
 	
 	
 	@ExceptionHandler(org.springframework.dao.DuplicateKeyException.class)
@@ -74,6 +82,24 @@ public class GlobalExceptionHandler {
      ErrorMessageDto invaildOperation = new ErrorMessageDto();
 		invaildOperation.setErrorCode(HrManagementEnum.MissserveletException.getStatusCode());
 		invaildOperation.setErrorMessage(HrManagementEnum.MissserveletException.getStatusMessage());
+		return invaildOperation;
+	}
+	
+	@ExceptionHandler(com.isteer.exception.IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto IllegalArgumentException1( com.isteer.exception.IllegalArgumentException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.Illegal_Argumnet_role.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.Illegal_Argumnet_role.getStatusMessage());
+		return invaildOperation;
+	}
+	
+	@ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto DataIntegrityViolationException(org.springframework.dao.DataIntegrityViolationException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.Date_mismatch.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.Date_mismatch.getStatusMessage());
 		return invaildOperation;
 	}
 	

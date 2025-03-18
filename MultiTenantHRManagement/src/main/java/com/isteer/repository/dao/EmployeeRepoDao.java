@@ -19,4 +19,10 @@ public interface EmployeeRepoDao {
 
 	public int deleteEmployee(String employeeId);
 	
+	public List<Roles> getAllAvailableRoles();
+	
+//	public int updateUserRole(Employee employee);
+
+	public int updateUserRole(String employeeId, String roleId);
+	
 }

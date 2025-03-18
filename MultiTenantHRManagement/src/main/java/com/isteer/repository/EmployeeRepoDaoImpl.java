@@ -17,6 +17,7 @@ import com.isteer.entity.Roles;
 import com.isteer.enums.HrManagementEnum;
 import com.isteer.exception.EmployeeIdNullException;
 import com.isteer.exception.IllegalArgumentException;
+import com.isteer.exception.RoleIdNullException;
 import com.isteer.exception.TenantIdNullException;
 import com.isteer.repository.dao.EmployeeRepoDao;
 import com.isteer.util.EmployeeRowMapper;
@@ -159,5 +160,60 @@ public class EmployeeRepoDaoImpl implements EmployeeRepoDao {
 			return 0; // Indicates failure
 		}
 	}
+
+	@Override
+	public List<Roles> getAllAvailableRoles() {
+		String sql = "SELECT role_uuid, role_name, description FROM roles WHERE role_status = :status";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("status", 1);
+		return template.query(sql, param, new RolesRowmapper());
+		
+	}
+
+
+	@Override
+	public int updateUserRole(String employeeId, String roleId) {
+	    if (employeeId.isBlank()) {
+	        throw new EmployeeIdNullException(HrManagementEnum.Employee_id_null);
+	    }
+	    
+	    Employee employee = new Employee();
+	    employee.setEmployeeId(employeeId); // Correctly set employeeId
+	    employee.setRoleId(roleId);          // Correctly set roleId
+	    
+	    Optional<Employee> existingUser = findById(employee.getEmployeeId());
+	    if (!existingUser.isPresent()) {
+	        return -1;
+	    }
+
+	    // Validate roleId
+	    if (roleId.trim().isBlank()) {
+	        throw new RoleIdNullException(HrManagementEnum.Role_id_null);
+	    }
+
+	    String getRoleIdQuery = "SELECT role_uuid, role_name, description FROM roles WHERE role_uuid = :roleId";
+	    SqlParameterSource param = new MapSqlParameterSource().addValue("roleId", roleId);
+	    List<Roles> roleList = template.query(getRoleIdQuery, param, new RolesRowmapper());
+
+	    if (roleList != null && !roleList.isEmpty()) {
+	        roleId = roleList.get(0).getRoleId();
+	    } else {
+
+	        throw new IllegalArgumentException(HrManagementEnum.Illegal_Argumnet_role);
+	    }
+
+	    String sql = "UPDATE employee SET role_id = :roleId WHERE employee_status = :status AND employee_uuid = :employeeId";
+	    SqlParameterSource paramUpdate = new MapSqlParameterSource()
+	            .addValue("roleId", roleId)
+	            .addValue("status", 1)
+	            .addValue("employeeId", employee.getEmployeeId());
+
+	    try {
+	        return template.update(sql, paramUpdate);
+	    } catch (DataAccessException e) {
+	        e.printStackTrace();
+	        return 0;
+	    }
+	}
+
 
 }

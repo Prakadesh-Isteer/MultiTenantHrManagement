@@ -14,6 +14,8 @@ import com.isteer.entity.Roles;
 import com.isteer.enums.HrManagementEnum;
 import com.isteer.service.HrManagementEmployeeService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +36,7 @@ public class HrManagementEmployeeController {
 	HrManagementEmployeeService service;
 	
 	@PostMapping("user")
-	public ResponseEntity<?> registerUser(@RequestBody Employee employee) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody Employee employee) {
 	
 		int status = service.registerUser(employee);
 		if(status > 0) {
@@ -50,7 +52,7 @@ public class HrManagementEmployeeController {
 	}
 	
 	@PostMapping("addRole")
-	public ResponseEntity<?> addRole(@RequestBody Roles role) {
+	public ResponseEntity<?> addRole(@Valid @RequestBody Roles role) {
 		int status = service.addRole(role);
 		if(status > 0) {
 			 StatusMessageDto message = new StatusMessageDto(
@@ -91,7 +93,7 @@ public class HrManagementEmployeeController {
 	}
 	
 	@PutMapping("users")
-	public ResponseEntity<?> updateUser(@RequestParam String employeeId, @RequestBody Employee employee) {
+	public ResponseEntity<?> updateUser(  @RequestParam String employeeId, @Valid @RequestBody Employee employee) {
 		employee.setEmployeeId(employeeId);
 		int status = service.updateUser(employee);
 	
@@ -137,6 +139,41 @@ public class HrManagementEmployeeController {
 	
 }
 	
+	@GetMapping("roles")
+	public ResponseEntity<?> getAllAvailableUsersRoles(){
+		List<?> list = service.getAllAvailableRoles();
+		if(list.isEmpty()) {
+			ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.NO_USERS_FOUND_LIST.getStatusCode(),
+					HrManagementEnum.NO_USERS_FOUND_LIST.getStatusMessage());
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(error);
+		
+		}
+		return ResponseEntity.ok(list) ;
+		
+	}
+	
+	
+	@PutMapping("users/roles")
+	public ResponseEntity<?> updateUserRole(@RequestParam String employeeId, @RequestParam String roleId) {
+		int status = service.updateUserRole(employeeId,roleId);
+	
+		if (status > 0) {
+			StatusMessageDto message = new StatusMessageDto(
+					HrManagementEnum.USER_ROLE_UPDATED.getStatusCode(),
+					HrManagementEnum.USER_ROLE_UPDATED.getStatusMessage());
+			return ResponseEntity.status(HttpStatus.OK).body(message);
+		} else if (status == -1) {
+			// User not found, invalid tenantId
+			ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.USER_VALID_NOT_FOUND.getStatusCode(),
+					HrManagementEnum.USER_VALID_NOT_FOUND.getStatusMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+		}
+
+		ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.USER_ROLE_UPDATION_FAIL.getStatusCode(),
+				HrManagementEnum.USER_ROLE_UPDATION_FAIL.getStatusMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	
+	}
 	
 	
 
