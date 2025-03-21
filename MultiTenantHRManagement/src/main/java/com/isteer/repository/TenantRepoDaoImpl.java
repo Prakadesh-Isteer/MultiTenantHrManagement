@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.isteer.entity.Tenants;
 import com.isteer.enums.HrManagementEnum;
@@ -25,10 +26,11 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
 	@Autowired
 	NamedParameterJdbcTemplate template;
 	
+	@Transactional
 	@Override
 	public int addTenant(Tenants tenants) {
 		UUID uuid = UUID.randomUUID();
-        String tenantUuid = "Tenant-".concat(uuid.toString());
+        String tenantUuid = uuid.toString();
 		String insertTenant = "INSERT INTO tenants (tenant_uuid, tenant_name, address, contact_email, contact_phone, tenant_country, tenant_state, tenant_city) VALUES (:tenantId, :tenantName, :address, :email, :phone, :tenantCountry, :tenantState, :tenantCity)";
 		SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("tenantId", tenantUuid)
@@ -44,6 +46,7 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
 		
 	}
 
+	@Transactional
 	@Override
 	public List<Tenants> getAllTenants() {
 		String sql = "SELECT tenant_uuid, tenant_name, address, contact_email, contact_phone, tenant_country, tenant_state, tenant_city FROM tenants WHERE tenant_status = :status";
@@ -52,7 +55,7 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
 		return template.query(sql, param, new TenantRowMapper());
 	}
 
-	
+	@Transactional
 	// Method to check if a tenant exists by tenantId
 	public Optional<Tenants> findById(String tenantId) {
         String sql = "SELECT tenant_uuid, tenant_name, address, contact_email, contact_phone, tenant_country, tenant_state, tenant_city FROM tenants WHERE tenant_uuid = :tenantId";
@@ -67,6 +70,7 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
         }
     }
 
+	@Transactional
     // Method to update the tenant
 	@Override
     public int updateTenant(Tenants tenant) {
@@ -105,6 +109,7 @@ public class TenantRepoDaoImpl implements TenantRepoDao{
         }
     }
  
+	@Transactional
     @Override
     public int deleteTenant(String tenantId) {
         if (tenantId == null || tenantId.trim().isEmpty()) {

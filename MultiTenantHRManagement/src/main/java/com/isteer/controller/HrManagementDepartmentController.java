@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isteer.dto.ErrorMessageDto;
 import com.isteer.dto.StatusMessageDto;
 import com.isteer.entity.Departments;
+import com.isteer.entity.Employee;
 import com.isteer.enums.HrManagementEnum;
 import com.isteer.service.HrManagementDepartmentService;
 
@@ -34,8 +35,9 @@ public class HrManagementDepartmentController {
 	
 		
 	@PostMapping("departments")
-	public ResponseEntity<?> addDepartment(@Valid @RequestBody Departments departments) {
-	    int status = service.addDepartment(departments);
+	public ResponseEntity<?> addDepartment(@RequestParam String tenantId ,@Valid @RequestBody Departments departments) {
+		  departments.setTenantId(tenantId);
+	    int status = service.addDepartment(tenantId, departments);
 
 	    if (status > 0) {
 	        // Department created successfully
@@ -124,6 +126,19 @@ public class HrManagementDepartmentController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	
 }
+	
+	@GetMapping("department/employee")
+	public ResponseEntity<?> getEmployeesByDepartment(@RequestParam String departmentId) {
+		List<?> list = service.getAllEmployeesByDepartmentId(departmentId);
+		if (list.isEmpty()) {
+			ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.No_list_of_tenansts.getStatusCode(),
+					HrManagementEnum.No_list_of_tenansts.getStatusMessage());
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(error);
+		}
+
+		return ResponseEntity.ok(list);
+	}
+	
 
 	
 }

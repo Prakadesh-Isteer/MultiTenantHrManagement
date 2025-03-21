@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isteer.dto.ErrorMessageDto;
 import com.isteer.dto.StatusMessageDto;
+import com.isteer.dto.UserDetailsDto;
 import com.isteer.entity.Employee;
 import com.isteer.entity.Roles;
 import com.isteer.enums.HrManagementEnum;
@@ -36,9 +37,9 @@ public class HrManagementEmployeeController {
 	HrManagementEmployeeService service;
 	
 	@PostMapping("user")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody Employee employee) {
+	public ResponseEntity<?> registerUser(@RequestParam String departmentId, @Valid @RequestBody List<UserDetailsDto> details) {
 	
-		int status = service.registerUser(employee);
+		int status = service.registerUser(details, departmentId);
 		if(status > 0) {
 			 StatusMessageDto message = new StatusMessageDto(
 		                HrManagementEnum.USER_CREATED_SUCCESS.getStatusCode(),
@@ -81,7 +82,7 @@ public class HrManagementEmployeeController {
 	}
 	
 	@GetMapping("user")
-	public ResponseEntity<?> getMethodName(@RequestParam String employeeId) {
+	public ResponseEntity<?> getUsersById(@RequestParam String employeeId) {
 		List<?> single = service.getuserById(employeeId);
 		if(single.isEmpty()) {
 			ErrorMessageDto error = new ErrorMessageDto(HrManagementEnum.NO_USERS_FOUND_LIST.getStatusCode(),
@@ -93,9 +94,9 @@ public class HrManagementEmployeeController {
 	}
 	
 	@PutMapping("users")
-	public ResponseEntity<?> updateUser(  @RequestParam String employeeId, @Valid @RequestBody Employee employee) {
-		employee.setEmployeeId(employeeId);
-		int status = service.updateUser(employee);
+	public ResponseEntity<?> updateUser(@RequestParam String employeeId, @Valid @RequestBody UserDetailsDto details) {
+		details.setEmployeeId(employeeId);
+		int status = service.updateUser(details);
 	
 		if (status > 0) {
 			StatusMessageDto message = new StatusMessageDto(

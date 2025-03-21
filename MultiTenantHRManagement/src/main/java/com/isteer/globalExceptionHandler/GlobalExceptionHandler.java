@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.isteer.dto.ErrorMessageDto;
 import com.isteer.enums.HrManagementEnum;
+import com.isteer.exception.InsertionFailedException;
 import com.isteer.exception.TenantIdNullException;
+import com.isteer.exception.EmployeeNotFoundException;
+import com.isteer.exception.DepartmentNotFoundException;
 
 @ControllerAdvice
 //i used this annotation to display the data in json form directly. 
@@ -102,6 +105,34 @@ public class GlobalExceptionHandler {
 		invaildOperation.setErrorMessage(HrManagementEnum.Date_mismatch.getStatusMessage());
 		return invaildOperation;
 	}
+	
+	@ExceptionHandler(InsertionFailedException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto InsertionFailedException(InsertionFailedException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.Insertion_failed_Exception.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.Insertion_failed_Exception.getStatusMessage());
+		return invaildOperation;
+	}
+	
+	@ExceptionHandler(EmployeeNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto EmployeeNotFoundException(EmployeeNotFoundException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.EMPLOYEE_VALID_NOT_FOUND.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.EMPLOYEE_VALID_NOT_FOUND.getStatusMessage());
+		return invaildOperation;
+	}
+	
+	@ExceptionHandler(DepartmentNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorMessageDto DepartmentNotFoundException(DepartmentNotFoundException e) {
+     ErrorMessageDto invaildOperation = new ErrorMessageDto();
+		invaildOperation.setErrorCode(HrManagementEnum.DEPARTMENT_VALID_NOT_FOUND.getStatusCode());
+		invaildOperation.setErrorMessage(HrManagementEnum.DEPARTMENT_VALID_NOT_FOUND.getStatusMessage());
+		return invaildOperation;
+	}
+	
 	
 	
 }

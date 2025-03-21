@@ -1,5 +1,6 @@
 package com.isteer.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,11 +15,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.isteer.entity.Departments;
+import com.isteer.entity.Employee;
 import com.isteer.enums.HrManagementEnum;
 import com.isteer.exception.DepartmentIdNullException;
-import com.isteer.exception.TenantIdNullException;
 import com.isteer.repository.dao.DeapartmentRepoDao;
 import com.isteer.util.DepartmentRowMapper;
+import com.isteer.util.EmployeeRowMapper;
 
 @Component
 public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
@@ -28,6 +30,7 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
 
 			
 	 // Method to check if the tenant exists by explicitly selecting columns
+	@Transactional
 	@Override
     public boolean isTenantExist(String tenantId) {
         String checkTenantExistsQuery = "SELECT tenant_uuid FROM tenants WHERE tenant_uuid = :tenantId AND tenant_status = :status";
@@ -40,7 +43,8 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
 
         return !tenantUuids.isEmpty(); // Return true if tenant exists
     }
-    
+	
+	@Transactional
  // Method to check if the department exists
     @Override
     public boolean isDepartmentExist(String departmentName, String tenantId) {
@@ -56,14 +60,16 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
         return !departmentNames.isEmpty();  // Returns true if the department exists
     }
 
-   
+    @Transactional
     // Method to add the department (also not using * in SQL)
     @Override
-    public int addDepartment(Departments department) {
+    public int addDepartment(String tenantId , Departments department) {
     	UUID uuid = UUID.randomUUID();
-        String departmentUuid = "Department-".concat(uuid.toString()) ;
-        String hodId = "HOD-".concat(uuid.toString());
-    	
+        String departmentUuid = uuid.toString();
+        UUID uuid1 = UUID.randomUUID();
+        String hodId = uuid1.toString();
+            
+        
     	String addDepartmentQuery = "INSERT INTO departments (department_uuid, department_head_uuid, tenant_id, department_name, contact_email, contact_phone, description) "
                 + "VALUES (:departmentUuid, :headId, :tenantId, :departmentName, :email, :phone, :description)";
 
@@ -78,6 +84,7 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
 
         return template.update(addDepartmentQuery, params);
     }
+    
    @Transactional
     public Optional<Departments> findbyId(String departmentId){
     	String sql = "SELECT department_uuid, department_head_uuid, tenant_id, department_name, contact_email, contact_phone, description FROM departments where department_uuid = :departmentId";
@@ -92,7 +99,7 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
          }
     	
     }
-
+   @Transactional
 	@Override
 	public int updateDepartment(Departments department) {
 		
@@ -115,21 +122,21 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
 	            return template.update(sql, param);
 	        } catch (DataAccessException e) {
 	                 e.printStackTrace();
-	            // Log any database access errors and return 0 or throw a custom exception
-//	            log.error("Error updating tenant in the database: {}", e.getMessage());
-	        	System.out.println("tenant update");
+
 	            return 0;  // Indicating failure to update
 	        }
 	    }
 	
+	@Transactional
 	@Override
 	public List<Departments> getAllDepartments(){
-		String sql = "SELECT department_uuid,department_head_uuid,tenant_id,department_name,contact_email,contact_phone,description FROM departments WHERE department_status= :status";
+		String sql = "SELECT d.department_uuid, d.department_head_uuid, d.tenant_id, d.department_name, d.contact_email, d.contact_phone, d.description FROM departments d JOIN tenants t ON d.tenant_id = t.tenant_uuid WHERE d.department_status = :status AND t.tenant_status = 1";
 	 SqlParameterSource param = new MapSqlParameterSource()
 			 .addValue("status", 1);
 	 return template.query(sql, param , new DepartmentRowMapper());
 	}
-
+	
+	@Transactional
 	@Override
 	public int deleteDepartment(String departmentId) {
 		 if (departmentId == null || departmentId.trim().isEmpty()) {
@@ -161,16 +168,39 @@ public class DepartmentRepoDaoImpl implements DeapartmentRepoDao{
 			 
 		 }catch(Exception e){
 				return 0;
-		 }
-
-		
+		 }	
 
 	}
 	
-	
-	
+	@Transactional	
+	@Override
+	public List<Employee> getAllEmployeesByDepartment(String departmentId) {
+
+	    if (departmentId == null || departmentId.trim().isEmpty()) {
+	        throw new DepartmentIdNullException(HrManagementEnum.Department_id_null);
+	    }
+
+	    try {
+	        String sql = "SELECT e.tenant_id, e.department_id, e.role_id, e.employee_uuid, e.userName, e.password, e.first_name, e.last_name, e.email, e.phone, e.address, e.date_of_joining, e.job_title FROM employee e JOIN roles r ON e.role_id = r.role_uuid WHERE e.department_id = :departmentId AND r.role_name = :roleName AND e.employee_status = :status";
+	        
+	        SqlParameterSource param = new MapSqlParameterSource()
+	                .addValue("departmentId", departmentId)
+	                .addValue("roleName", "Employee")
+	                .addValue("status", 1);
+
+	        // Fetch the list of employees for the department
+	        List<Employee> employees = template.query(sql, param, new EmployeeRowMapper());
+
+	        // Return an empty list if no employees found
+	        return employees != null ? employees : new ArrayList<>();
+	    } catch (Exception e) {
+	        // Log the exception and return an empty list if an error occurs
+	        e.printStackTrace(); // It's important to log the exception for debugging
+	        return new ArrayList<>();
+	    }
 	}
-    
+
+}  
   
 	
 
